@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.kosmos.consultorio.dto.DoctorDto;
 import com.kosmos.consultorio.models.Doctor;
 import com.kosmos.consultorio.services.DoctorService;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 @RequestMapping("/doctors")
@@ -27,5 +30,11 @@ public class DoctorController {
     public ResponseEntity<Doctor> createDoctor(@RequestBody @Valid DoctorDto doctorDto) {
         return new ResponseEntity<>(doctorService.save(doctorDto), HttpStatus.CREATED);
     }
+
+    @GetMapping("{doctorId}/appointments")
+    public String getMethodName(@RequestParam String param) {
+        return new String();
+    }
+    
     
 }

@@ -7,12 +7,14 @@ import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class AppointmentDto {
 
     @Size(min = 3, max = 50, message = "El nombre del paciente debe tener entre 3 y 50 caracteres")

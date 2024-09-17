@@ -2,7 +2,8 @@ package com.kosmos.consultorio.services;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Optional;
-
+import java.util.stream.Collectors;
+import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.kosmos.consultorio.dto.AppointmentDto;
@@ -48,6 +49,10 @@ public class AppointmentService {
         return appointmentRepository.save(appointment);
     }
 
+    public List<Appointment> findByDoctorIdAndDateAndOfficeId(Long doctorId, LocalDate date, Long officeId) {
+        return appointmentRepository.findByDoctorIdAndDateAndOfficeId(doctorId, date, officeId);
+    }
+
     private void validateDoctorAppointments(Long doctorId, LocalDate date) {
         long appointmentCount = appointmentRepository.countByDoctorIdAndDate(doctorId, date);
         if (appointmentCount >= 8) 
@@ -58,6 +63,23 @@ public class AppointmentService {
         Optional<Appointment> existingAppointment = appointmentRepository.findByDateAndTimeAndDoctorIdAndOfficeId(date, time, doctorId, officeId);
         if (existingAppointment.isPresent()) 
             throw new IllegalArgumentException("Ya existe una cita con el mismo doctor, consultorio, fecha y hora.");
+    }
+
+    public List<AppointmentDto> getAppointmentsByDoctorAndDateAndOffice(Long doctorId, LocalDate date, Long officeId) {
+        List<Appointment> appointments = appointmentRepository.findByDoctorIdAndDateAndOfficeId(doctorId, date, officeId);
+        return appointments.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
+    private AppointmentDto convertToDto(Appointment appointment) {
+        return AppointmentDto.builder()
+                .patientName(appointment.getPatientName())
+                .doctorId(appointment.getDoctor().getId())
+                .officeId(appointment.getOffice().getId())
+                .date(appointment.getDate())
+                .time(appointment.getTime())
+                .build();
     }
 
 }
