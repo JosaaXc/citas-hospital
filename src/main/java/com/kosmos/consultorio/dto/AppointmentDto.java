@@ -1,7 +1,6 @@
 package com.kosmos.consultorio.dto;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 import jakarta.validation.constraints.Future;
@@ -26,7 +25,7 @@ public class AppointmentDto {
     private Long officeId;
 
     @NotNull(message = "La fecha y hora de la cita es requerida")
-    @Future(message = "La fecha y hora de la cita debe ser futura")
+    @Future(message = "La fecha y hora de la cita debe ser futuras")
     private LocalDate date;
 
     @NotNull(message = "La hora de la cita es requerida")

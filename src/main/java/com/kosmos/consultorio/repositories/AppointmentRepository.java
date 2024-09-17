@@ -3,7 +3,6 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.List;
 import java.util.Optional;
 
 import com.kosmos.consultorio.models.Appointment;
