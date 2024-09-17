@@ -1,4 +1,6 @@
 package com.kosmos.consultorio.services;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -27,13 +29,8 @@ public class AppointmentService {
 
     
     public Appointment save(AppointmentDto appointmentDto) {
-
-        Optional<Appointment> existingAppointment = appointmentRepository.findByDateAndTimeAndDoctorIdAndOfficeId(
-            appointmentDto.getDate(), appointmentDto.getTime(), appointmentDto.getDoctorId(), appointmentDto.getOfficeId());
-
-        if (existingAppointment.isPresent()) {
-            throw new IllegalArgumentException("Ya existe una cita con el mismo doctor, consultorio, fecha y hora.");
-        }
+        validateDoctorAppointments(appointmentDto.getDoctorId(), appointmentDto.getDate());
+        checkExistingAppointment(appointmentDto.getDate(), appointmentDto.getTime(), appointmentDto.getDoctorId(), appointmentDto.getOfficeId());
 
         Doctor doctor = doctorRepository.findById(appointmentDto.getDoctorId())
             .orElseThrow(() -> new ResourceNotFoundException("Doctor not found"));
@@ -51,5 +48,16 @@ public class AppointmentService {
         return appointmentRepository.save(appointment);
     }
 
-    
+    private void validateDoctorAppointments(Long doctorId, LocalDate date) {
+        long appointmentCount = appointmentRepository.countByDoctorIdAndDate(doctorId, date);
+        if (appointmentCount >= 8) 
+            throw new IllegalArgumentException("El doctor ya tiene 8 citas para la fecha seleccionada.");
+    }
+
+    private void checkExistingAppointment(LocalDate date, LocalTime time, Long doctorId, Long officeId) {
+        Optional<Appointment> existingAppointment = appointmentRepository.findByDateAndTimeAndDoctorIdAndOfficeId(date, time, doctorId, officeId);
+        if (existingAppointment.isPresent()) 
+            throw new IllegalArgumentException("Ya existe una cita con el mismo doctor, consultorio, fecha y hora.");
+    }
+
 }
