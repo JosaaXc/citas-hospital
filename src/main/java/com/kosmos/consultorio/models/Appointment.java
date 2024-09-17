@@ -1,6 +1,7 @@
 package com.kosmos.consultorio.models;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -10,6 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,7 +20,9 @@ import lombok.Setter;
 
 
 @Entity
-@Table(name = "appointments")
+@Table(name = "appointments", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"doctor_id", "office_id", "date", "time"})
+})
 @Getter
 @Setter
 @Builder
@@ -41,7 +45,7 @@ public class Appointment {
     @Column(name = "patient_name")
     private String patientName;
 
-    @Column(name = "appointment_date_time")
-    private LocalDateTime appointmentDateTime;
+    private LocalDate date;
 
+    private LocalTime time;
 }
